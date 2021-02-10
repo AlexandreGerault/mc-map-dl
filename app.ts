@@ -16,7 +16,31 @@ const server = serve({
 
 for await (const request of server) {
   switch (request.url) {
-    case "/download":
+    case "/download": {
+      const informations = [];
+      for await (const entry of Deno.readDir("public/saves")) {
+        if (entry.name.match(".zip") === null) {
+          continue;
+        }
+        informations.push({
+          filename: entry.name,
+          meta: await Deno.lstat("public/saves/" + entry.name),
+        });
+      }
+      const sortedInfos = informations.sort((a, b) =>
+        a.meta.birthtime!.getTime() -
+        b.meta.birthtime!.getTime()
+      );
+
+      const content = await serveFile(
+        request,
+        `public/saves/${sortedInfos[sortedInfos.length - 1].filename}`,
+      );
+      request.respond(content);
+      break;
+    }
+
+    case "/generate":
       if (await exists(srcFolder)) {
         const zipArchive = await zipDir(srcFolder);
         for (const key of Object.keys(zipArchive.files())) {
