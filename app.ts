@@ -7,11 +7,11 @@ import { v4 } from "https://deno.land/std@0.86.0/uuid/mod.ts";
 
 import "https://deno.land/x/dotenv/load.ts";
 
-const { MINECRAFT_SERVER_PATH: srcFolder, PORT } = config();
+const { MINECRAFT_SERVER_PATH: srcFolder, PORT, HOSTNAME } = config();
 
-const server = serve({ hostname: "127.0.0.1", port: parseInt(PORT, 10) });
+const server = serve({ hostname: HOSTNAME, port: parseInt(PORT, 10) });
 console.log(
-  `HTTP webserver running.  Access it at:  http://localhost:${PORT}/`,
+  `HTTP webserver running.  Access it at:  http://${HOSTNAME}:${PORT}/`,
 );
 
 const zipper = () => {
