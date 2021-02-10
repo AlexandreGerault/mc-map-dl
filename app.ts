@@ -18,7 +18,6 @@ for await (const request of server) {
   switch (request.url) {
     case "/download":
       if (await exists(srcFolder)) {
-        const encoder = new TextEncoder();
         const zipArchive = await zipDir(srcFolder);
         for (const key of Object.keys(zipArchive.files())) {
           if (key.match("world") === null) {
